@@ -1,0 +1,53 @@
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'kotlin'
+
+
+//gradle 开发 sdk 依赖
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.android.tools.build:gradle:4.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
+
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-codec:commons-codec:1.11'
+    //noinspection GradleDependency
+    implementation 'org.ow2.asm:asm:6.0'
+    //noinspection GradleDependency
+    implementation 'org.ow2.asm:asm-util:6.0'
+    //noinspection GradleDependency
+    implementation 'org.ow2.asm:asm-commons:6.0'
+
+
+
+}
+
+group = 'com.lin.okhttpplugin' //插件组名
+version = '1.0.0' //插件版本
+
+gradlePlugin{
+    plugins{
+        //lookPlugin 任意名字都可以
+//        OkHttpPlugin{
+//            id = group + '.TestPlugin' //插件id，供外部引用
+//            implementationClass = 'com.lin.okhttpplugin.TestPlugin'
+//        }
+        MyKotlinTestPlugin{
+            id = group + '.MyKotlinTestPlugin' //插件id，供外部引用
+            implementationClass = 'com.lin.okhttpplugin.MyKotlinTestPlugin'
+        }
+
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url = '../asm_okhttp_repo'
+        }
+    }
+}

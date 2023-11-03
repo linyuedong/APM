@@ -38,3 +38,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "APM"
 include ':app'
+include ':mylibrary'
+include ':OkhttpPlugin'

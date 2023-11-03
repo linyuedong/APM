@@ -2,7 +2,10 @@ package com.example.apm.utils;
 
 import android.util.Log;
 
+import com.example.apm.aop.Animal;
 import com.example.apm.aop.OkHttpEventListener;
+import com.example.apm.kotlin.OkhttpTest;
+import com.example.mylibrary.LibOkJavaTest;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +27,7 @@ import okhttp3.Response;
  * @author ArgusAPM Team
  */
 public class HttpHelper {
-    private static final String TAG = "argus-apm";
+    public static final String TAG = "argus-apm";
     public static final String GET_URL = "https://www.baidu.com/";
     public static final String TYPE = "application/octet-stream";
     public static final String POST_URL = "http://zhushou.72g.com/app/gift/gift_list/";
@@ -34,12 +37,11 @@ public class HttpHelper {
             @Override
             public void run() {
                 super.run();
-                String url = "https://reg.163.com/logins.jsp?id=helloworld&pwd=android";
                 OkHttpClient.Builder builder = new OkHttpClient().newBuilder().eventListenerFactory(OkHttpEventListener.FACTORY);
 //                OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
                 OkHttpClient okHttpClient = builder.build();
                 Request request = new Request.Builder()
-                        .url(url)
+                        .url(GET_URL)
                         .build();
                 Call call = okHttpClient.newCall(request);
                 okHttpClient.eventListenerFactory();
@@ -55,6 +57,8 @@ public class HttpHelper {
     }
 
     public void asyncGetRequest() {
+        LibOkJavaTest.asyncGetRequest();
+        OkhttpTest.instance.get();
         new Thread() {
             @Override
             public void run() {
@@ -78,6 +82,30 @@ public class HttpHelper {
                 });
             }
         }.start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+
+                Request request = new Request.Builder()
+                        .url(GET_URL)
+                        .build();
+                Response response = null;
+                try {
+                    response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    Log.i(TAG, "asyncGetRequest: " + responseBody);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+//        Animal a = new Animal();
+//        a.getAge();
+//        a.getEventListener();
+
     }
 
     public void syncPostRequest() {
